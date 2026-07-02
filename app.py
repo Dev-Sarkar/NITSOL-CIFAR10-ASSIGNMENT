@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 
 from torchvision import transforms
-from torchvision.models import resnet18
+from torchvision.models import efficientnet_b0
 from PIL import Image
 
 st.set_page_config(
@@ -33,10 +33,10 @@ div.stProgress > div > div > div{
 </style>
 """, unsafe_allow_html=True)
 
-st.title("🧠 AI Image Classification")
+st.title("🧠 Deep Learning Image Classification")
 
 st.caption(
-    "Transfer Learning • ResNet18 • PyTorch • CIFAR-10 • Test Accuracy: 96.69%"
+    "Transfer Learning • EfficientNet-B0 • PyTorch • CIFAR-10 • Test Accuracy: 97.63%"
 
 )
 
@@ -57,14 +57,14 @@ with st.sidebar:
 
     st.markdown("---")
 
-    st.write("**Architecture:** ResNet18")
+    st.write("**Architecture:** EfficientNet-B0")
     st.write("**Dataset:** CIFAR-10")
     st.write("**Framework:** PyTorch")
     st.write("**Transfer Learning:** ✅ Yes")
 
     st.metric(
         "Test Accuracy",
-        "96.69%"
+        "97.63%"
     )
 
     st.markdown("---")
@@ -106,17 +106,13 @@ transform = transforms.Compose([
     transforms.Normalize(MEAN, STD)
 ])
 
-model = resnet18(weights=None)
+model = efficientnet_b0(weights=None)
 
-num_features = model.fc.in_features
+num_features = model.classifier[1].in_features
 
-model.fc = nn.Sequential(
-    nn.Dropout(0.5),
-    nn.Linear(num_features, 512),
-    nn.ReLU(inplace=True),
-    nn.BatchNorm1d(512),
+model.classifier = nn.Sequential(
     nn.Dropout(0.3),
-    nn.Linear(512, 10)
+    nn.Linear(num_features, 10)
 )
 
 # ==========================================================
@@ -124,7 +120,7 @@ model.fc = nn.Sequential(
 # ==========================================================
 device = torch.device("cpu")
 checkpoint = torch.load(
-    "checkpoints/best_model.pth",
+    "checkpoints/efficientnet_b0_best.pth",
     map_location=device
 )
 model.load_state_dict(checkpoint["model_state_dict"])
@@ -219,7 +215,7 @@ if uploaded_file is not None:
 st.subheader("📘 About This Model")
 
 st.write("""
-This application uses **Transfer Learning** with **ResNet18**
+This application uses **Transfer Learning** with **EfficientNet-B0**
 to classify images into one of the ten CIFAR-10 classes.
 
 For best results, upload images belonging to:
