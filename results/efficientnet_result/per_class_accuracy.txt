@@ -1,0 +1,10 @@
+airplane    : 98.10%
+automobile  : 98.40%
+bird        : 97.40%
+cat         : 94.80%
+deer        : 98.00%
+dog         : 95.80%
+frog        : 99.00%
+horse       : 98.80%
+ship        : 98.70%
+truck       : 97.30%
